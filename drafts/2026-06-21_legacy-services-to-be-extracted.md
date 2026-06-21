@@ -1,6 +1,6 @@
 ---
 type: draft
-status: pending-extraction
+status: extracted
 decided_by: Claude (CTO audit)
 verdict: R0 期内由 OpenHands 物理迁出 Core
 date: 2026-06-21
