@@ -1,35 +1,38 @@
-# Legacy 归档区（M1 任务产物）
+# Legacy Services Archive
 
-由 OpenHands 在 M1 任务中物理迁出 Lite 旧代码。
-约定结构：
+R0 阶段从 MBclaw-Lite main 分支物理迁出的旧代码。
+文件内容未修改，仅供 R2+ 重启时参考。
 
-```
-drafts/legacy/
-├── utopia/           # utopia_service.py + chat_extractor.py + routers/utopia.py + models/utopia.py
-├── psychology/       # psychology_engine.py + models/user_profile.py
-├── collision/        # collision_engine.py + models/thought_collision.py
-├── agent/            # agent_runtime.py + sub_agent_coordinator.py + dual_key.py +
-│                     # auto_mode.py + skill_extractor.py + curator.py
-├── approval/         # approval_gate.py + models/{pending_approval,approval_log}.py
-├── queue/            # task_queue.py + message_priority.py + models/task_queue.py
-├── classification/   # classification_service.py + models/classification_node.py
-├── search/           # layered_search.py
-├── vector/           # vector_store.py
-├── feedback/         # feedback_service.py + models/feedback.py
-├── tools/            # tool_service.py + models/tool.py
-├── llm/              # model_service.py + llm/mimo_adapter.py + models/model_profile.py
-├── integrations/     # integration_service.py + models/external_integration.py
-├── i18n/             # i18n_service.py + middleware/locale.py + i18n/*.json
-├── ops/              # startup_checker.py
-├── snapshot/         # snapshot_service.py + models/snapshot.py
-└── scheduler/        # idle_scheduler.py
-```
+## 迁出清单
 
-每个迁出文件顶部必须加注释：
-```python
-# 归档自 MBclaw-Lite@<commit-hash>, 路径 app/services/<file>.py
-# 移出原因：见 MBclaw-Memory/decisions/rejected/ 或 MBclaw/design/audit/SURVIVAL-REVIEW-2026-06-21.md
-# R0 状态：移出 Core；R2 重启或永久放弃见上述文档
-```
+| 文件 | 源路径 | 分类 | 处置 |
+|------|--------|------|------|
+| utopia_service.py | app/services/ | utopia | 永久移出 |
+| chat_extractor.py | app/services/ | utopia | 永久移出 |
+| psychology_engine.py | app/services/ | psychology | 永久移出 |
+| collision_engine.py | app/services/ | collision | 永久移出 |
+| sub_agent_coordinator.py | app/services/ | agent | 永久移出 |
+| dual_key.py | app/services/ | agent | 永久移出 |
+| agent_runtime.py | app/services/ | agent | R2 重写参考 |
+| skill_extractor.py | app/services/ | agent | R2 重写参考 |
+| curator.py | app/services/ | agent | R2 重写参考 |
+| auto_mode.py | app/services/ | agent | R2 重写参考 |
+| feedback_service.py | app/services/ | feedback | R2 重写参考 |
+| classification_service.py | app/services/ | classification | R2 重写参考 |
+| vector_store.py | app/services/ | vector | R2 重写参考 |
+| layered_search.py | app/services/ | search | 合并入新 search |
+| integration_service.py | app/services/ | integrations | R3 重启参考 |
+| i18n_service.py | app/services/ | i18n | R3 重启参考 |
+| approval_gate.py | app/services/ | approval | 简化版进 R1 |
+| task_queue.py | app/services/ | queue | R2 重启参考 |
+| message_priority.py | app/services/ | queue | R2 重启参考 |
+| tool_service.py | app/services/ | tools | R2 重启参考 |
+| model_service.py | app/services/ | llm | R2 重启参考 |
+| startup_checker.py | app/services/ | ops | 简化为 5 行 init |
+| snapshot_service.py | app/services/ | snapshot | 简化为 VACUUM INTO |
+| idle_scheduler.py | app/services/ | scheduler | 简化并入 main |
 
-不修改任何代码内容。OpenHands 用 MBclaw-Lite/PROMPTS-FOR-EXECUTORS.md 提示词 3 执行。
+同步归档对应 routers/ 和 models/ 文件。
+源 commit: `d4ea0d26417d5fb2fee0e81c74c331f346221e1b`
+迁出日期: 2026-06-21
+操作方: OpenHands (M1)
