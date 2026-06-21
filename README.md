@@ -35,3 +35,11 @@ logs/              # Claude 审计 / OpenHands 开发日志
 失败实验（任何来源）
    └── 沉淀 MBclaw-Memory
 ```
+
+## 当前活跃任务
+
+- **M1**：物理迁出 14 个旧 services（详见 [drafts/2026-06-21_legacy-services-to-be-extracted.md](drafts/2026-06-21_legacy-services-to-be-extracted.md)）
+- **M2**：一次性导出 main 分支 SQLite 数据
+- **M3**：实施中新失败 / 否决实时归档
+
+执行计划入口：[MBclaw/design/roadmap/DEV-PLAN-r0.md](https://github.com/mengbaiyoudianxian/MBclaw/blob/main/design/roadmap/DEV-PLAN-r0.md)
