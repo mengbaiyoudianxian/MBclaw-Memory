@@ -1,30 +1,40 @@
 ---
 type: rejected
 status: archived
-decided_by: Claude (CTO agent review)
-verdict: 多 Agent 网络永久禁止；MBclaw 不是 Agent 框架
+decided_by: Claude (CTO agent review, self-corrected)
+verdict: 禁止 6 个 Agent 反模式；不禁止未来功能型 Agent
 date: 2026-06-21
+note: 标题与措辞已自我修正（见 logs/2026-06-21_cto-self-correction.md）
 ---
 
-# Agent 网络与多 Agent 协作 — 永久放弃
+# 6 个 Agent 反模式 — 永久禁止（不是禁止 Agent 本身）
 
-## 假想方案核心
-将 MBclaw 演化为多 Agent 平台：
-- ExtractorAgent + ClassifierAgent + SchedulerAgent + ReviewerAgent + CoordinatorAgent
-- Planner/Executor 双层
-- Agent 之间通过 pub/sub 协作
-- 每个 Agent 持自己的状态/存储
-- "循环博弈"提升质量
+## 上下文
 
-## 否决理由
-1. **角色错位**：MBclaw 是**被 Agent 调用的记忆服务**，不是 Agent 框架
-2. **多 Agent = 复杂度指数增长**：通信、状态、一致性、调试成本全部爆炸
-3. **循环博弈无收益证据**：同模型互评有系统性偏见，已在 dual-key 否决
-4. **违反 R0 三大限制**：复杂 Agent 网络 / 循环博弈结构 / 分布式
-5. **Agent 框架赛道有 OpenHands/LangGraph/Letta**：MBclaw 重复造轮子无意义
+Lite 现状：39 services 中 7 个直接服务于"虚构的多 Agent"假设（agent_runtime / sub_agent_coordinator / dual_key / auto_mode / approval_gate 多维 / task_queue / skill_extractor）。
+R0 审计判定为过度设计，移出 Core。
 
-## 替代方案（R0 落地）
-**MBclaw 不跑 Agent**。所有"代理"由外部框架完成：
+## 真正永久禁止的 6 条
+
+| # | 反模式 | 禁止理由 |
+|---|---|---|
+| 1 | 内部 Agent 互调形成循环（A→B→A） | 状态机爆炸，无法调试 |
+| 2 | 同模型 Dual-Key 互评 | 系统性偏见无证据收益 |
+| 3 | MBclaw 进程内同时跑多个 Agent | 违反单进程限制 |
+| 4 | 提前为"未来扩展"造 Agent 框架 | 已犯过（438 行 agent_runtime） |
+| 5 | 无安全边界的 Auto Mode | 工程伦理 |
+| 6 | Agent 持自己的存储绕过 MemoryRepo | 一致性灾难 |
+
+## 明确**不**禁止的
+
+- ✅ R2/R3+ 演化为功能型 Agent 系统
+- ✅ R2 引入 ReflectionAgent（单步、3 工具）
+- ✅ 多个外部 Agent 通过 HTTP 调 MBclaw（这就是预期形态）
+- ✅ 在 6 反模式之外的任何新 Agent 设计
+
+## 替代/允许的形态
+
+R0/R1：MBclaw 无内部 Agent，外部 Agent 通过 HTTP 调用：
 ```
 OpenHands / Claude Code / 自写 App
         │ HTTP REST
@@ -32,19 +42,22 @@ OpenHands / Claude Code / 自写 App
    MBclaw（纯记忆服务）
 ```
 
-R2 中后期最多 **1 个 ReflectionAgent**：
-- 单步循环（max_steps=1）
-- 3 个工具（2 读 1 写）
-- 用户主动触发，无后台运行
-- 详见 Design `agent/AGENT-r0.md`
+R3+ 即使 MBclaw 内部出现功能型 Agent，多 Agent 协作仍**只能通过 HTTP**：
+```
+Agent A (外部进程) ──┐
+                    ├──▶ MBclaw HTTP API ──▶ SQLite
+Agent B (外部进程) ──┘
+```
 
 ## 教训
+
 > "多 Agent 协作"是 2024-2025 年最被高估的架构模式。
 > 多数任务用单 Agent + 好的工具就能完成。
-> 多 Agent 增加的是协调复杂度，不是解题能力。
-> MVP 阶段引入 = 用复杂度交换"看起来很 AI"。
+> 但**禁止反模式 ≠ 禁止演化**——把"防止再犯"伪装成"永远不做"是另一种不诚实。
+> CTO 也会用力过猛，必须自我修正并留痕。
 
 ## 关联
-- 设计：[[architecture/ARCH-r0]] §6
-- 详细 Agent 评审：MBclaw `design/agent/AGENT-r0.md`
-- 同类否决：[[2026-06-21_dual-key-and-subagent]] [[2026-06-21_auto-mode]] [[2026-06-21_collision-engine]]
+
+- 设计：[[architecture/ARCH-r0]] §6 / MBclaw `design/agent/AGENT-r0.md`
+- 自我修正记录：[[logs/2026-06-21_cto-self-correction]]
+- 同类否决（仍有效）：[[2026-06-21_dual-key-and-subagent]] [[2026-06-21_auto-mode]] [[2026-06-21_collision-engine]]

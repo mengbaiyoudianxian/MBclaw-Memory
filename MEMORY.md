@@ -11,7 +11,7 @@
 - [Auto Mode 移出 Core](decisions/rejected/2026-06-21_auto-mode.md) — 安全边界未定义就做自主决策
 - [MiMo 特殊化降级](decisions/rejected/2026-06-21_mimo-special.md) — 单一 provider 战略锁死
 - [多记忆形态并存反模式](decisions/rejected/2026-06-21_memory-fragmentation.md) — 9 处碎片化 → 统一 MemoryRepo
-- [Agent 网络与多 Agent 协作](decisions/rejected/2026-06-21_agent-network-overdesign.md) — MBclaw 不是 Agent 框架，永久放弃多 Agent 网络
+- [6 个 Agent 反模式永久禁止](decisions/rejected/2026-06-21_agent-network-overdesign.md) — 不禁 Agent 本身，禁的是反模式（自我修正后）
 
 ## 失败实验
 
@@ -25,3 +25,4 @@
 ## 日志
 
 - [Claude CTO 审计日志](logs/2026-06-21_claude-cto-audit.md) — 首次审计起止与产出
+- [CTO 自我修正：永久禁止 Agent 表述越界](logs/2026-06-21_cto-self-correction.md) — 用户挑战命中修辞过度
